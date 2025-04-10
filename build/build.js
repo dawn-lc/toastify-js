@@ -14,7 +14,7 @@ const distPath = parse(packageConfig.main).dir;
 const mainPath = join(sourcePath, `${packageConfig.name}.ts`);
 const cssPath = join(sourcePath, `${packageConfig.name}-ts.css`);
 mkdir(distPath);
-esbuild.buildSync({
+esbuild.build({
     allowOverwrite: true,
     entryPoints: [mainPath],
     outfile: join(distPath, `${packageConfig.name}.js`),
@@ -25,7 +25,7 @@ esbuild.buildSync({
     target: tsConfig.target,
     charset: 'utf8'
 });
-esbuild.buildSync({
+esbuild.build({
     allowOverwrite: true,
     entryPoints: [mainPath],
     outfile: join(distPath, `${packageConfig.name}.min.js`),
@@ -36,7 +36,7 @@ esbuild.buildSync({
     target: tsConfig.target,
     charset: 'utf8'
 });
-esbuild.buildSync({
+esbuild.build({
     allowOverwrite: true,
     entryPoints: [cssPath],
     outfile: join(distPath, `${packageConfig.name}.css`),
@@ -47,7 +47,7 @@ esbuild.buildSync({
     platform: 'browser',
     charset: 'utf8'
 });
-esbuild.buildSync({
+esbuild.build({
     allowOverwrite: true,
     entryPoints: [cssPath],
     outfile: join(distPath, `${packageConfig.name}.min.css`),
