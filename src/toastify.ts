@@ -68,10 +68,8 @@ const addTimeout = (toast: Toast, callback: () => void): void => {
         toast.progress.style.setProperty('--toast-progress', `${remaining / duration}`);
     };
     toast.progress.style.setProperty('--toast-progress', `1`);
-    const intervalId = window.setInterval(updateRemainingTime, 50);
+    const intervalId = window.setInterval(updateRemainingTime, 100);
     const timeoutId = window.setTimeout(() => {
-        if (isNullOrUndefined(toast.progress)) return;
-        toast.progress.style.setProperty('--toast-progress', `0`);
         callback();
         delTimeout(toast);
     }, duration);
@@ -91,7 +89,7 @@ const delTimeout = (toast: Toast): void => {
         toastIntervals.delete(toast);
     }
     if (!isNullOrUndefined(toast.progress)){
-        toast.progress.style.setProperty('--toast-progress', `0`);
+        toast.progress.style.removeProperty('--toast-progress');
     }
 };
 const offscreenContainer = document.createElement('div');
