@@ -56,17 +56,22 @@ const getContainer = (gravity: Gravity, position: Position): HTMLElement => {
     return toastContainers.get(containerId)!;
 };
 const addTimeout = (toast: Toast, callback: () => void): void => {
+    if (isNullOrUndefined(toast.progress)) return;
+    if (isNullOrUndefined(toast.options.duration)) return;
     delTimeout(toast);
     const startTime = Date.now();
-    const duration = toast.options.duration!;
+    const duration = toast.options.duration;
     const updateRemainingTime = () => {
+        if (isNullOrUndefined(toast.progress)) return;
         const elapsed = Date.now() - startTime;
         const remaining = Math.max(0, duration - elapsed);
-        toast.progress!.style.setProperty('--toast-progress', `${remaining / duration}`);
+        toast.progress.style.setProperty('--toast-progress', `${remaining / duration}`);
     };
+    toast.progress.style.setProperty('--toast-progress', `1`);
     const intervalId = window.setInterval(updateRemainingTime, 50);
     const timeoutId = window.setTimeout(() => {
-        toast.progress!.style.setProperty('--toast-progress', `0`);
+        if (isNullOrUndefined(toast.progress)) return;
+        toast.progress.style.setProperty('--toast-progress', `0`);
         callback();
         delTimeout(toast);
     }, duration);
@@ -84,6 +89,9 @@ const delTimeout = (toast: Toast): void => {
     if (!isNullOrUndefined(intervalId)) {
         clearInterval(intervalId);
         toastIntervals.delete(toast);
+    }
+    if (!isNullOrUndefined(toast.progress)){
+        toast.progress.style.setProperty('--toast-progress', `0`);
     }
 };
 const offscreenContainer = document.createElement('div');
